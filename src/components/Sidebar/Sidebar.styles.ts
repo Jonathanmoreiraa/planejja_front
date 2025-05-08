@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import theme from '../../theme';
 
 export const SidebarContainer = styled.div`
   width: 260px;
-  background: #3C855B;
+  background: ${theme.palette.primary.main};
   color: #fff;
   height: 100vh;
   display: flex;
@@ -65,10 +66,10 @@ export const MenuItem = styled.li<{ selected?: boolean }>`
   padding: 18px 32px;
   cursor: pointer;
   background: ${({ selected }) => (selected ? '#fff' : 'transparent')};
-  color: ${({ selected }) => (selected ? '#3C855B' : '#fff')};
+  color: ${({ selected }) => (selected ? theme.palette.primary.main : '#fff')};
   font-weight: 700;
   font-size: 19px;
-  border-left: ${({ selected }) => (selected ? '4px solid #3C855B' : '4px solid transparent')};
+  border-left: ${({ selected }) => (selected ? '4px solid ' + theme.palette.primary.main : '4px solid transparent')};
   transition: background 0.2s, color 0.2s;
   &:hover {
     background: ${({ selected }) => (selected ? '#fff' : 'rgba(255,255,255,0.08)')};
@@ -84,7 +85,7 @@ export const SubMenu = styled.ul`
 
 export const SubMenuItem = styled.li<{ selected?: boolean }>`
   padding: 16px 32px;
-  color: #3C855B;
+  color: ${theme.palette.primary.main};
   font-weight: 700;
   font-size: 18px;
   background: ${({ selected }) => (selected ? '#e6f2ec' : '#fff')};

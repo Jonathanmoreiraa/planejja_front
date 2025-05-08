@@ -23,3 +23,32 @@ export interface AuthResponse {
     id: number;
   };
 }
+
+export interface ApiRevenue {
+  id: number;
+  user_id: number;
+  description: string;
+  due_date: string;
+  value: string;
+  received: number;
+  created: string;
+  modified: string;
+  DeletedAt: string | null;
+}
+
+export interface Revenue {
+  id: number;
+  status: 'Received' | 'Pending' | 'Overdue';
+  description: string;
+  dueDate: string;
+  value: number;
+}
+
+export interface EditRevenue {
+  value: number;
+  description: string;
+  due_date: string | null;
+  received: number;
+}
+
+//TODO: adicionar interface de tipos aqui.

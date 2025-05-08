@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from '../../theme';
 
 export const Panel = styled.div`
   position: absolute;
@@ -8,9 +9,8 @@ export const Panel = styled.div`
   height: 520px;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-  border: 2px solid #3C855B;
-  z-index: 200;
+  border: 2px solid ${theme.palette.primary.main};
+  z-index: 400;
   top: 24px;
   display: flex;
   flex-direction: column;
@@ -34,11 +34,11 @@ export const NotificationsList = styled.div`
     border-radius: 8px;
   }
   &::-webkit-scrollbar-thumb {
-    background: #3C855B;
+    background: ${theme.palette.primary.main};
     border-radius: 8px;
   }
   &::-webkit-scrollbar-thumb:hover {
-    background: #2e6846;
+    background: ${theme.palette.secondary.main};
   }
   &::-webkit-scrollbar-button:single-button {
     display: none;
@@ -51,7 +51,7 @@ export const NotificationsList = styled.div`
     height: 0;
   }
   scrollbar-width: thin;
-  scrollbar-color: #3C855B #e6f2ec;
+  scrollbar-color: ${theme.palette.primary.main} #e6f2ec;
 `;
 
 export const NotificationItem = styled.div<{ expanded?: boolean }>`
@@ -81,7 +81,7 @@ export const TitleRow = styled.div<{ padding?: string }>`
 
 export const ClearAll = styled.span`
   font-weight: bold;
-  color: #3C855B;
+  color: ${theme.palette.primary.main};
   cursor: pointer;
   margin-right: 12px;
   font-size: 1rem;
@@ -95,14 +95,14 @@ export const Title = styled.div`
   font-weight: bold;
   text-align: center;
   flex: 1;
-  color: #3C855B;
+  color: ${theme.palette.primary.main};
 `;
 
 export const Close = styled.span`
   cursor: pointer;
   font-size: 1.2rem;
   margin-left: 8px;
-  color: #3C855B;
+  color: ${theme.palette.primary.main};
 `;
 
 export const Text = styled.div`

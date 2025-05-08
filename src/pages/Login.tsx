@@ -103,7 +103,7 @@ const Login: React.FC = () => {
           sx={{
             width: '100%',
             height: '200px',
-            bgcolor: '#358156',
+            bgcolor: theme.palette.primary.main,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

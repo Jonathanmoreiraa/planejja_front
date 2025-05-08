@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import theme from './theme';
 import { useEffect, useState } from 'react';
 import authService from './services/authService';
+import Revenues from './pages/Revenues';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +65,8 @@ function App() {
               }
             >
               <Route index element={<Home />} />
-            </Route>
+              <Route path='/receitas' element={<Revenues />} />
+              </Route>
           </Routes>
         </Router>
       </ThemeProvider>

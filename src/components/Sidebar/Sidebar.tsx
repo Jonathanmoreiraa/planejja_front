@@ -14,6 +14,11 @@ import {
   BottomSection,
   ExitItem
 } from './Sidebar.styles';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material';
+import { OverlayNotification } from '../../layouts/MainLayout.styles';
 
 // TODO: Depois da criação da rota de notificações, substituir por uma requisição ao backend
 const mockNotifications = [
@@ -43,6 +48,10 @@ const Sidebar: React.FC = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState(mockNotifications);
   const panelRef = useRef<HTMLDivElement>(null);
+  const bellRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -70,10 +79,18 @@ const Sidebar: React.FC = () => {
     await putNotification({ id, read: true });
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
+
   useEffect(() => {
     if (!showNotifications) return;
 
     function handleClickOutside(event: MouseEvent) {
+      if (bellRef.current && bellRef.current.contains(event.target as Node)) {
+        return;
+      }
       if (
         panelRef.current &&
         !panelRef.current.contains(event.target as Node)
@@ -93,11 +110,14 @@ const Sidebar: React.FC = () => {
       <TopSection>
         {/* TODO: Adicionar imagem padrão aqui para todos e o usuário poderá mudar para o dele */}
         <AvatarImg src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" />
-        <BellWrapper>
-          <FaRegBell size={24} onClick={handleBellClick} style={{ cursor: 'pointer' }} />
-          {unreadCount > 0 && <NotificationDot onClick={handleBellClick}>{unreadCount}</NotificationDot>}
-        </BellWrapper>
-        {showNotifications && (
+        {!isMobile && (
+          <BellWrapper ref={bellRef}>
+            <FaRegBell size={24} onClick={handleBellClick} style={{ cursor: 'pointer' }} />
+            {unreadCount > 0 && <NotificationDot onClick={handleBellClick}>{unreadCount}</NotificationDot>}
+          </BellWrapper>
+        )}
+        {showNotifications && <>
+          <OverlayNotification onClick={() => setShowNotifications(false)} />
           <div ref={panelRef}>
             <NotificationPanel
               notifications={notifications}
@@ -106,10 +126,10 @@ const Sidebar: React.FC = () => {
               onMarkRead={handleMarkRead}
             />
           </div>
-        )}
+        </>}
       </TopSection>
       <Menu>
-        <MenuItem selected={selected === 'Dashboard'} onClick={() => {setSelected('Dashboard'); setFinancasOpen(false)}}>
+        <MenuItem selected={selected === 'Dashboard'} onClick={() => {setSelected('Dashboard'); setFinancasOpen(false); navigate('/')}}>
           <FaChartBar style={{ marginRight: 16 }} /> Dashboard
         </MenuItem>
         <MenuItem selected={selected === 'Receitas' || selected === 'Despesas'} onClick={() => {setFinancasOpen(!financasOpen); setSelected("Finanças")}}>
@@ -117,7 +137,7 @@ const Sidebar: React.FC = () => {
         </MenuItem>
         {financasOpen && (
           <SubMenu>
-            <SubMenuItem selected={selected === 'Receitas'} onClick={() => setSelected('Receitas')}>
+            <SubMenuItem selected={selected === 'Receitas'} onClick={() => { setSelected('Receitas'); navigate('/receitas'); }}>
               Receitas
             </SubMenuItem>
             <SubMenuItem selected={selected === 'Despesas'} onClick={() => setSelected('Despesas')}>
@@ -133,7 +153,7 @@ const Sidebar: React.FC = () => {
         </MenuItem>
       </Menu>
       <BottomSection>
-        <ExitItem>
+        <ExitItem onClick={handleLogout}>
           <FaSignOutAlt style={{ marginRight: 16 }} /> Sair
         </ExitItem>
       </BottomSection>
