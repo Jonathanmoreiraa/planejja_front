@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Button, TextField, Box, Typography } from '@mui/material';
+import { Button, TextField, Box, Typography, Autocomplete } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import theme from '../theme';
 
@@ -156,3 +156,31 @@ export const DateFieldWrapper = styled(DatePicker)(({ theme }) => ({
     borderColor: "#2e6846 !important",
   }
 })); 
+
+export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  marginTop: 16,
+  '& .MuiAutocomplete-inputRoot': {
+    borderRadius: 8,
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.grey[300],
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.grey[400],
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+  '& .MuiInputLabel-root': {
+    color: theme.palette.grey[600],
+    '&.Mui-focused': {
+      color: theme.palette.primary.main,
+    },
+  },
+  '& .css-qthytj-MuiPopper-root-MuiAutocomplete-popper': {
+    backgroundColor: 'red',
+    overflow: 'auto',
+    height: '50%',
+  }
+}));
+

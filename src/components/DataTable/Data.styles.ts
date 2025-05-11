@@ -39,13 +39,13 @@ export const StyledTableRow = styled(TableRow)({
 export const StatusTypography = styled(Typography)<{ status: string }>(({ status }) => ({
   fontWeight: 700,
   color:
-    status === 'Received'
+    status === 'Received' || status === 'Paga'
       ? theme.palette.primary.main
-      : status === 'Pending'
-      ? '#888'
-      : status === 'Overdue'
+      : status === 'Próxima do vencimento'
+      ? '#B0A748'
+      : status === 'Overdue' || status === 'Em atraso'
       ? '#FF5A5F'
-      : '#222',
+      : '#888',
 }));
 
 export const PaginationWrapper = styled(Box)({

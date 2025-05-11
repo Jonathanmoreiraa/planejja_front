@@ -10,6 +10,7 @@ import theme from './theme';
 import { useEffect, useState } from 'react';
 import authService from './services/authService';
 import Revenues from './pages/Revenues';
+import Expenses from './pages/Expenses';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +67,8 @@ function App() {
             >
               <Route index element={<Home />} />
               <Route path='/receitas' element={<Revenues />} />
-              </Route>
+              <Route path='/despesas' element={<Expenses />} />
+            </Route>
           </Routes>
         </Router>
       </ThemeProvider>

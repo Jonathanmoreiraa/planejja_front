@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -38,11 +38,14 @@ const RevenueCreateModal: React.FC<RevenueCreateModalProps> = ({ open, onClose, 
     //TODO: mudar para booleano no backend
     const receivedValue = received ? 1 : 0;
     onSubmit({ value: Number(value), description, due_date: dueDateString, received: receivedValue });
+  };
+
+  useEffect(() => {
     setValue('');
     setDescription('');
     setDueDate(null);
     setReceived(false);
-  };
+  }, [open]);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth PaperProps={{ sx: { borderRadius: 4, p: 0 } }}>
@@ -63,13 +66,18 @@ const RevenueCreateModal: React.FC<RevenueCreateModalProps> = ({ open, onClose, 
               onChange={e => setValue(e.target.value)}
               margin="normal"
               sx={{ width: { xs: "100%", md: "75%" } }}
-              // TODO: adicionar máscara de dinheiro
+              required
             />
             <DateFieldInput
               label="Data de vencimento"
               value={dueDate || null}
               onChange={setDueDate}
               sx={{ mt: 2, mb: 1 }}
+              slotProps={{
+                textField: {
+                  required: true,
+                },
+              }}
             />
           </Box>
           <StyledTextField
@@ -77,6 +85,7 @@ const RevenueCreateModal: React.FC<RevenueCreateModalProps> = ({ open, onClose, 
             value={description}
             onChange={e => setDescription(e.target.value)}
             fullWidth
+            required
             margin="normal"
           />
           <Box display="flex" alignItems="center" mt={2} mb={3}>

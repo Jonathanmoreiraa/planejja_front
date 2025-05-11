@@ -9,17 +9,17 @@ export interface DataTableHeader<T> {
 }
 
 interface DataTableProps<T> {
+  items: T[];
   headers: DataTableHeader<T>[];
-  rows: T[];
   renderCell?: (row: T, key: keyof T) => React.ReactNode;
   actions?: (row: T) => React.ReactNode;
   emptyMessage?: string;
   loading?: boolean;
 }
 
-function DataTable<T extends { id?: number | string }>({
+function DataTable<T>({
+  items,
   headers,
-  rows,
   renderCell,
   actions,
   emptyMessage = 'Nenhum resultado encontrado.',
@@ -48,21 +48,21 @@ function DataTable<T extends { id?: number | string }>({
                 </Box>
               </TableCell>
             </TableRow>
-          ) : rows.length === 0 ? (
+          ) : items.length === 0 ? (
             <TableRow>
               <TableCell colSpan={colSpan} align="center">
                 {emptyMessage}
               </TableCell>
             </TableRow>
           ) : (
-            rows.map((row) => (
-              <StyledTableRow key={row.id ?? Math.random()}>
+            items.map((item, index) => (
+              <StyledTableRow key={index}>
                 {headers.map((header) => (
                   <TableCell key={String(header.key)} align={header.align || 'left'}>
-                    {renderCell ? renderCell(row, header.key) : (row[header.key] as React.ReactNode)}
+                    {renderCell ? renderCell(item, header.key) : (item[header.key] as React.ReactNode)}
                   </TableCell>
                 ))}
-                {actions && <TableCell align="center">{actions(row)}</TableCell>}
+                {actions && <TableCell align="center">{actions(item)}</TableCell>}
               </StyledTableRow>
             ))
           )}

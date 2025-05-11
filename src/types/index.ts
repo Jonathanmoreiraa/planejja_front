@@ -51,4 +51,15 @@ export interface EditRevenue {
   received: number;
 }
 
+export interface Expense {
+  id: number;
+  user_id: number;
+  category: string;
+  description: string;
+  value: number;
+  due_date: string;
+  paid: number;
+  situation: string;
+}
+
 //TODO: adicionar interface de tipos aqui.

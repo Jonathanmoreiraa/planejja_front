@@ -14,6 +14,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import RevenueEditModal from '../components/Modal/RevenueEditModal';
 import { ApiRevenue, Revenue } from '../types';
+import theme from '../theme';
 
 const headers: DataTableHeader<Revenue>[] = [
   { label: 'Situação', key: 'status' },
@@ -28,21 +29,21 @@ const cardHeaders: GenericCardListHeader<Revenue>[] = [
   { label: 'Data de vencimento', key: 'dueDate' },
   { label: 'Valor', key: 'value' },
 ];
-const ITEMS_PER_PAGE = 10;
 
 const Revenues: React.FC = () => {
+  const ITEMS_PER_PAGE = 10;
   const [revenues, setRevenues] = useState<Revenue[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const isMobile = useMediaQuery('(max-width:900px)');
   const [filterOpen, setFilterOpen] = useState(false);
   const [modalAddOpen, setModalAddOpen] = useState(false);
-  const totalPages = Math.max(1, Math.ceil(revenues.length / ITEMS_PER_PAGE));
-  const paginated = revenues.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
   const [error, setError] = useState('');
   const [openError, setOpenError] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [revenueData, setRevenueData] = useState<Revenue | null>(null);
+  const totalPages = Math.max(1, Math.ceil(revenues.length / ITEMS_PER_PAGE));
+  const paginated = revenues.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
   const handleOpenAddModal = () => setModalAddOpen(true);
   const handleCloseAddModal = () => setModalAddOpen(false);
@@ -148,6 +149,8 @@ const Revenues: React.FC = () => {
       minHeight: '100%', 
       background: '#fff',
       overflow: 'auto',
+      scrollbarWidth: 'thin',
+      scrollbarColor: '#358156 #e6f2ec',
       '@media (max-width: 900px)': {
         p: 2,
         pb: 4
@@ -201,7 +204,7 @@ const Revenues: React.FC = () => {
                 <EditIcon fontSize="small" />
               </IconButton>
               <IconButton size="small" color="error" onClick={() => handleDelete(item.id)}>
-                <DeleteIcon fontSize="small" />
+                <DeleteIcon fontSize="small" sx={{ color: theme.palette.error.main }} />
               </IconButton>
             </Stack>
           )}
@@ -209,35 +212,31 @@ const Revenues: React.FC = () => {
         />
       ) : (
         <DataTable
+          items={paginated}
           headers={headers}
-          rows={paginated}
-          renderCell={(row, key) => {
+          renderCell={(item, key) => {
             if (key === 'status') {
               return (
-                <StatusTypography status={row.status}>
-                  {row.status === 'Received' && 'Recebida'}
-                  {row.status === 'Pending' && 'Pendente'}
-                  {row.status === 'Overdue' && 'Em atraso'}
+                <StatusTypography status={item.status}>
+                  {item.status === 'Received' && 'Recebida'}
+                  {item.status === 'Pending' && 'Pendente'}
+                  {item.status === 'Overdue' && 'Em atraso'}
                 </StatusTypography>
               );
             }
             if (key === 'value') {
-              return `R$ ${row.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+              return `R$ ${item.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
             }
             if (key === 'dueDate') {
-              return new Date(row.dueDate).toLocaleDateString('pt-BR');
+              return new Date(item.dueDate).toLocaleDateString('pt-BR');
             }
-            return row[key];
+            return item[key];
           }}
-          actions={(row) => (
-            <Stack direction="row" spacing={1} justifyContent="center">
-              <IconButton size="small" color="primary" onClick={() => handleOpenEditModal(row)}>
-                <EditIcon fontSize="small" />
-              </IconButton>
-              <IconButton size="small" color="error" onClick={() => handleDelete(row.id)}>
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </Stack>
+          actions={(item) => (
+            <>
+              <IconButton onClick={() => handleOpenEditModal(item)}><EditIcon /></IconButton>
+              <IconButton onClick={() => handleDelete(item.id)}><DeleteIcon sx={{ color: theme.palette.error.main }} /></IconButton>
+            </>
           )}
           emptyMessage="Nenhum resultado encontrado."
           loading={loading}

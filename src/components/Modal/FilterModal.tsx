@@ -102,7 +102,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onFilter }) =>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent sx={{ pt: 2 }}>
+      <DialogContent sx={{ pt: 2, scrollbarWidth: 'thin', scrollbarColor: '#358156 #e6f2ec', }}>
         <Box component="form" onSubmit={handleSubmit}>
           <StyledTextField
             label="Descrição"
@@ -169,7 +169,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onFilter }) =>
               />
               <FormControlLabel
                 control={<Checkbox color="success" checked={values.status.overdue} onChange={() => handleStatusChange('overdue')} />}
-                label="Atrasada"
+                label="Em atraso"
               />
             </FormGroup>
           </Box>

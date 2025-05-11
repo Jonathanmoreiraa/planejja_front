@@ -8,6 +8,9 @@ const theme = createTheme({
     secondary: {
       main: '#69A683',
     },
+    error: {
+      main: '#F57665',
+    },
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',

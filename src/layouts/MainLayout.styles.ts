@@ -16,6 +16,8 @@ export const MainContent = styled.main`
   transition: margin-left 0.3s;
   width: calc(100vw - 260px);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: ${theme.palette.primary.main} #e6f2ec;
   height: 100vh;
 
   @media (max-width: 900px) {
@@ -26,6 +28,8 @@ export const MainContent = styled.main`
     height: calc(100vh - 56px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: ${theme.palette.primary.main} #e6f2ec;
   }
 `;
 

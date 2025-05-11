@@ -140,7 +140,7 @@ const Sidebar: React.FC = () => {
             <SubMenuItem selected={selected === 'Receitas'} onClick={() => { setSelected('Receitas'); navigate('/receitas'); }}>
               Receitas
             </SubMenuItem>
-            <SubMenuItem selected={selected === 'Despesas'} onClick={() => setSelected('Despesas')}>
+            <SubMenuItem selected={selected === 'Despesas'} onClick={() => { setSelected('Despesas'); navigate('/despesas'); }}>
               Despesas
             </SubMenuItem>
           </SubMenu>

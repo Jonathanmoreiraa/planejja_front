@@ -66,13 +66,18 @@ const RevenueEditModal: React.FC<RevenueEditModalProps> = ({ open, onClose, onSu
               onChange={e => setValue(e.target.value)}
               margin="normal"
               sx={{ width: { xs: "100%", md: "75%" } }}
-              // TODO: adicionar máscara de dinheiro
+              required
             />
             <DateFieldInput
               label="Data de vencimento"
               value={dueDate || null}
               onChange={setDueDate}
               sx={{ mt: 2, mb: 1 }}
+              slotProps={{
+                textField: {
+                  required: true,
+                },
+              }}
             />
           </Box>
           <StyledTextField
@@ -81,6 +86,7 @@ const RevenueEditModal: React.FC<RevenueEditModalProps> = ({ open, onClose, onSu
             onChange={e => setDescription(e.target.value)}
             fullWidth
             margin="normal"
+            required
           />
           <Box display="flex" alignItems="center" mt={2} mb={3}>
             <Typography mr={2}>Receita já recebida?</Typography>
