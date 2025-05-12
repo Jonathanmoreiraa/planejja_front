@@ -55,11 +55,13 @@ export interface Expense {
   id: number;
   user_id: number;
   category: string;
+  category_id: number;
   description: string;
   value: number;
   due_date: string;
   paid: number;
   situation: string;
+  multiple_payments: boolean;
+  num_installments: number;
+  payment_day: number;
 }
-
-//TODO: adicionar interface de tipos aqui.

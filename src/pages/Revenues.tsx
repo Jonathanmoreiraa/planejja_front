@@ -8,7 +8,7 @@ import ActionButton from '../components/ActionButton';
 import { StatusTypography } from '../components/DataTable/Data.styles';
 import api from '../services/api';
 import GenericCardList, { GenericCardListHeader } from '../components/DataTable/GenericCardList';
-import FilterModal from '../components/Modal/FilterModal';
+import RevenueFilterModal from '../components/Modal/RevenueFilterModal';
 import RevenueCreateModal from '../components/Modal/RevenueCreateModal';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
@@ -19,14 +19,14 @@ import theme from '../theme';
 const headers: DataTableHeader<Revenue>[] = [
   { label: 'Situação', key: 'status' },
   { label: 'Descrição', key: 'description' },
-  { label: 'Data de vencimento', key: 'dueDate' },
+  { label: 'Data', key: 'dueDate' },
   { label: 'Valor', key: 'value', align: 'right' },
 ];
 
 const cardHeaders: GenericCardListHeader<Revenue>[] = [
   { label: 'Situação', key: 'status' },
   { label: 'Descrição', key: 'description' },
-  { label: 'Data de vencimento', key: 'dueDate' },
+  { label: 'Data', key: 'dueDate' },
   { label: 'Valor', key: 'value' },
 ];
 
@@ -56,9 +56,7 @@ const Revenues: React.FC = () => {
       handleGetRevenues();
       handleCloseAddModal();
     } catch (err) {
-      const errorMessage = err && typeof err === 'object' ? (err as { response: { data: { message: string } } }).response.data.message : 'Erro ao criar receita. Tente novamente.';
-      setError(errorMessage);
-      setOpenError(true);
+      handleError(err);
     }
   };
 
@@ -67,9 +65,7 @@ const Revenues: React.FC = () => {
       const res = await api.get('/api/revenues')
       setRevenues(formatRevenues(res.data));
     } catch (err) {
-      const errorMessage = err && typeof err === 'object' ? (err as { response: { data: { message: string } } }).response.data.message : 'Erro ao criar receita. Tente novamente.';
-      setError(errorMessage);
-      setOpenError(true);
+      handleError(err);
     }
     
     setLoading(false);
@@ -106,9 +102,7 @@ const Revenues: React.FC = () => {
       handleGetRevenues();
       setEditModalOpen(false);
     } catch (err) {
-      const errorMessage = err && typeof err === 'object' ? (err as { response: { data: { message: string } } }).response.data.message : 'Erro ao criar receita. Tente novamente.';
-      setError(errorMessage);
-      setOpenError(true);
+      handleError(err);
     }
   } 
 
@@ -118,24 +112,24 @@ const Revenues: React.FC = () => {
       await api.delete(`/api/revenue/${id}`);
       handleGetRevenues();
     } catch (err) {
-      const errorMessage = err && typeof err === 'object' ? (err as { response: { data: { message: string } } }).response.data.message : 'Erro ao criar receita. Tente novamente.';
-      setError(errorMessage);
-      setOpenError(true);
+      handleError(err);
     }
-    
   };
 
   const handleFilter = async (values: object) => {
-    console.log('Filtro aplicado:', values);
     try {
       const res = await api.post('/api/revenue/filter', values);
       setRevenues(formatRevenues(res.data));
     } catch (err) {
-      const errorMessage = err && typeof err === 'object' ? (err as { response: { data: { message: string } } }).response.data.message : 'Erro ao criar receita. Tente novamente.';
-      setError(errorMessage);
-      setOpenError(true);
+      handleError(err);
     }
   };
+
+  const handleError = (error: unknown) => {
+    const errorMessage = error && typeof error === 'object' ? (error as { response: { data: { message: string } } }).response.data.message : 'Erro ao efetuar a ação, tente novamente.';
+    setError(errorMessage);
+    setOpenError(true);
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -164,7 +158,7 @@ const Revenues: React.FC = () => {
           <ActionButton onClick={handleOpenAddModal} variant='outlined' color="success">Cadastrar</ActionButton>
         </Stack>
       </Stack>
-      <FilterModal open={filterOpen} onClose={() => setFilterOpen(false)} onFilter={handleFilter} />
+      <RevenueFilterModal open={filterOpen} onClose={() => setFilterOpen(false)} onFilter={handleFilter} />
       <RevenueCreateModal
         open={modalAddOpen}
         onClose={handleCloseAddModal}

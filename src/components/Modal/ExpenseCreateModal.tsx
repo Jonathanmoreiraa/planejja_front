@@ -29,12 +29,14 @@ interface ExpenseCreateModalProps {
     due_date: string | null;
     paid: number;
     category_id: number;
-    installments?: number;
+    multiple_payments: boolean;
+    num_installments?: number;
     payment_day?: number;
   }) => void;
+  onError: (error: unknown) => void;
 }
 
-const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, onSubmit }) => {
+const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, onSubmit, onError }) => {
   const [value, setValue] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
@@ -48,20 +50,20 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, 
 
   const getCategories = async () => {
     try {
-        const res = await api.get('/api/categories');
-        setCategories(res.data.map((cat: { name: string, id: number }) => ({ name: cat.name, id: cat.id })));
+      const res = await api.get('/api/categories');
+      setCategories(res.data.map((cat: { name: string, id: number }) => ({ name: cat.name, id: cat.id })));
     } catch (err) {
-        console.error('Failed to fetch categories', err);
+      onError(err);
     }
   };
 
   const handleCategoryChange = async (event: React.SyntheticEvent | undefined, value: string | undefined) => {
     if (!value) {
-        return;
+      return;
     }
     
     if (!categories.some(cat => cat.name.toLowerCase() === value.toLowerCase())) {
-        await handleCategoryAdd(value); 
+      await handleCategoryAdd(value); 
     }
 
     setCategory(value);
@@ -74,7 +76,7 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, 
       setCategory(name);
       setCategoryId(res.data.id);
     } catch (err) {
-      console.error('Failed to add category', err);
+      onError(err);
     }
   };
 
@@ -83,7 +85,7 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, 
       await api.delete(`/api/category/${id}`);
       setCategories(prevCategories => prevCategories.filter(cat => cat.id !== id));
     } catch (err) {
-      console.error('Failed to delete category', err);
+      onError(err);
     }
   }
 
@@ -91,8 +93,15 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, 
     e.preventDefault();
     const dueDateString = dueDate?.toISOString() || null;
     const paidValue = paid ? 1 : 0;
-    console.log(categoryId, category);
-    onSubmit({ value: Number(value), description, due_date: dueDateString, paid: paidValue, category_id: categoryId, installments, payment_day: paymentDay });
+    onSubmit({ 
+      value: Number(value), 
+      description, 
+      due_date: dueDateString, 
+      paid: paidValue, 
+      category_id: categoryId, 
+      multiple_payments: multiplePayments,
+      num_installments: installments, 
+      payment_day: paymentDay });
   };
 
   useEffect(() => {
@@ -123,137 +132,136 @@ const ExpenseCreateModal: React.FC<ExpenseCreateModalProps> = ({ open, onClose, 
         <Box component="form" onSubmit={handleSubmit}>
             <Box display="flex" alignItems={'center'} sx={{ flexDirection: { xs: 'column', md: 'row' },  gap: { sm: 0, md: 2 } }}>
                 <StyledTextField
-                    label="Valor (R$)"
-                    value={value}
-                    type="number"
-                    onChange={e => setValue(e.target.value)}
-                    margin="normal"
-                    sx={{ width: { xs: "100%", md: "75%" } }}
-                    required
+                  label="Valor (R$)"
+                  value={value}
+                  type="number"
+                  onChange={e => setValue(e.target.value)}
+                  margin="normal"
+                  sx={{ width: { xs: "100%", md: "75%" } }}
+                  required
                 />
                 <DateFieldInput
-                    label="Data de vencimento"
-                    value={dueDate || null}
-                    onChange={setDueDate}
-                    sx={{ mt: 2, mb: 1 }}
-                    slotProps={{
-                        textField: {
-                        required: true,
-                        },
-                    }}
+                  label="Data"
+                  value={dueDate || null}
+                  onChange={setDueDate}
+                  sx={{ mt: 2, mb: 1 }}
+                  slotProps={{
+                    textField: {
+                      required: true,
+                    },
+                  }}
                 />
             </Box>
             <StyledTextField
-                label="Descrição"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                fullWidth
-                required
-                margin="normal"
+              label="Descrição"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              fullWidth
+              required
+              margin="normal"
             />
-
             <Autocomplete
-                disablePortal
-                options={categories}
-                fullWidth
-                autoHighlight
-                getOptionLabel={(option) => option.name}
-                slotProps={{
-                    listbox: {
-                        sx: {
-                            scrollbarWidth: 'none',
-                        }
-                    },
-                    paper: {
-                        sx: {
-                            maxHeight: 200,
-                        }
+              disablePortal
+              options={categories}
+              fullWidth
+              autoHighlight
+              getOptionLabel={(option) => option.name}
+              slotProps={{
+                  listbox: {
+                    sx: {
+                      scrollbarWidth: 'none',
                     }
-                }}
-                sx={{
-                    mt: 2
-                }}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        slotProps={{
-                            htmlInput: {
-                                ...params.inputProps,
-                                autoComplete: 'off',
-                            },
-                        }}
-                        label="Categoria"
-                        required
-                        onKeyDown={(event) => {
-                            if (event.key === 'Enter') {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                handleCategoryChange(undefined, params.inputProps.value as string | undefined);
-                            }
-                        }}
-                        value={category}
-                    />
-                )}
-                renderOption={(props, option) => {
-                    const { key, ...rest } = props;
-                    return (
-                        <li 
-                            key={key}
-                            onMouseDown={() => {handleCategoryChange(undefined, option.name) ; setCategoryId(option.id)}}
-                            style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'space-between',
-                            }} 
-                            {...rest}
-                        >
-                            {option.name}
-                            <IconButton
-                                edge="end"
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    handleCategoryDelete(option.id);
-                                }}
-                            >
-                                <CancelIcon style={{ color: '#d4d4d4' }} />
-                            </IconButton>
-                        </li>
-                    );
-                }}
+                  },
+                  paper: {
+                    sx: {
+                      maxHeight: 200,
+                    }
+                  }
+              }}
+              sx={{
+                mt: 2
+              }}
+              renderInput={(params) => (
+                  <TextField
+                      {...params}
+                      slotProps={{
+                        htmlInput: {
+                          ...params.inputProps,
+                          autoComplete: 'off',
+                        },
+                      }}
+                      label="Categoria"
+                      required
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          handleCategoryChange(undefined, params.inputProps.value as string | undefined);
+                        }
+                      }}
+                      value={category}
+                  />
+              )}
+              renderOption={(props, option) => {
+                const { key, ...rest } = props;
+                return (
+                  <li 
+                    key={key}
+                    onMouseDown={() => {handleCategoryChange(undefined, option.name) ; setCategoryId(option.id)}}
+                    style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between',
+                    }} 
+                    {...rest}
+                  >
+                    {option.name}
+                    <IconButton
+                      edge="end"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        handleCategoryDelete(option.id);
+                      }}
+                    >
+                      <CancelIcon style={{ color: '#d4d4d4' }} />
+                    </IconButton>
+                  </li>
+                );
+              }}
             />
             <Box display="flex" alignItems="center" mt={2} mb={3}>
-                <Typography mr={2}>Pagamento já realizado?</Typography>
-                <Switch color="success" checked={paid} onChange={e => setPaid(e.target.checked)} />
+              <Typography mr={2}>Pagamento já realizado?</Typography>
+              <Switch color="success" checked={paid} onChange={e => setPaid(e.target.checked)} />
             </Box>
             <Box display="flex" alignItems="center" mt={2}>
-                <Typography mr={2}>Pagamento em mais de uma vez?</Typography>
-                <Switch color="success" checked={multiplePayments} onChange={e => setMultiplePayments(e.target.checked)} />
+              <Typography mr={2}>Pagamento em mais de uma vez?</Typography>
+              <Switch color="success" checked={multiplePayments} onChange={e => setMultiplePayments(e.target.checked)} />
             </Box>
             {multiplePayments && (
-                <Box display="flex" alignItems={'center'} sx={{ flexDirection: { xs: 'column', md: 'row' },  gap: { sm: 0, md: 2 } }}>
+              <Box display="flex" alignItems={'center'} sx={{ flexDirection: { xs: 'column', md: 'row' },  gap: { sm: 0, md: 2 } }}>
                 <StyledTextField
-                    label="Nº de parcelas"
-                    value={installments || ''}
-                    type="number"
-                    onChange={e => setInstallments(Number(e.target.value))}
-                    margin="normal"
-                    sx={{ width: { xs: "100%", md: "75%" } }}
+                  label="Nº de parcelas"
+                  value={installments || ''}
+                  type="number"
+                  onChange={e => setInstallments(Number(e.target.value))}
+                  margin="normal"
+                  sx={{ width: { xs: "100%", md: "75%" } }}
                 />
                 <StyledTextField
-                    label="Dia mensal de pagamento"
-                    value={paymentDay || ''}
-                    type="number"
-                    onChange={e => setPaymentDay(Number(e.target.value))}
-                    margin="normal"
-                    sx={{ width: { xs: "100%", md: "75%" } }}
+                  label="Dia mensal de pagamento"
+                  value={paymentDay || ''}
+                  type="number"
+                  onChange={e => setPaymentDay(Number(e.target.value))}
+                  margin="normal"
+                  sx={{ width: { xs: "100%", md: "75%" } }}
                 />
-                </Box>
+              </Box>
             )}
             <DialogActions sx={{ justifyContent: 'center', pb: 2, px: 0 , mt: 2}}>
-                <ActionButton type="submit" variant="contained" color="success" sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}>
+              <ActionButton type="submit" variant="contained" color="success" sx={{ px: 6, borderRadius: 999, fontWeight: 600, fontSize: 18 }}>
                 Cadastrar
-                </ActionButton>
+              </ActionButton>
             </DialogActions>
         </Box>
       </DialogContent>

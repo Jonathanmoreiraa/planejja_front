@@ -30,7 +30,7 @@ interface FilterValues {
   }
 }
 
-interface FilterModalProps {
+interface RevenueFilterModalProps {
   open: boolean;
   onClose: () => void;
   onFilter: (values: FilterValues) => void;
@@ -49,7 +49,7 @@ const defaultValues: FilterValues = {
   }
 };
 
-const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onFilter }) => {
+const RevenueFilterModal: React.FC<RevenueFilterModalProps> = ({ open, onClose, onFilter }) => {
   const [values, setValues] = useState<FilterValues>({ ...defaultValues });
 
   //TODO: verificar se o valor é um número ou string
@@ -184,4 +184,4 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onFilter }) =>
   );
 };
 
-export default FilterModal; 
+export default RevenueFilterModal; 

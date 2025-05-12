@@ -69,7 +69,7 @@ const RevenueEditModal: React.FC<RevenueEditModalProps> = ({ open, onClose, onSu
               required
             />
             <DateFieldInput
-              label="Data de vencimento"
+              label="Data"
               value={dueDate || null}
               onChange={setDueDate}
               sx={{ mt: 2, mb: 1 }}

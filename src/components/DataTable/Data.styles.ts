@@ -68,9 +68,9 @@ export const PaginationCircle = styled(Box)({
   fontSize: 22,
 });
 
-export const RevenueCard = styled(Paper)({
+export const CardGeneric = styled(Paper)({
   marginBottom: 16,
-  padding: 20,
+  padding: 19,
   borderRadius: 16,
   boxShadow: 'none',
   border: '1px solid #E0E0E0',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Stack } from '@mui/material';
-import { RevenueCard, CardRow, EmptyStateBox } from './Data.styles';
+import { CardRow, EmptyStateBox, CardGeneric } from './Data.styles';
 
 export interface GenericCardListHeader<T> {
   label: string;
@@ -32,7 +32,7 @@ function GenericCardList<T extends { id?: number | string }>({
   return (
     <Box width="100%">
       {items.map((item) => (
-        <RevenueCard key={item.id ?? Math.random()}>
+        <CardGeneric key={item.id ?? Math.random()}>
           <Stack spacing={1}>
             {headers.map((header) => (
               <CardRow key={String(header.key)}>
@@ -48,7 +48,7 @@ function GenericCardList<T extends { id?: number | string }>({
               </Box>
             )}
           </Stack>
-        </RevenueCard>
+        </CardGeneric>
       ))}
     </Box>
   );
