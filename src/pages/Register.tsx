@@ -44,16 +44,10 @@ const Register: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { loading, error, token, success } = useSelector((state: RootState) => state.auth);
+  const { loading, error, success } = useSelector((state: RootState) => state.auth);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  useEffect(() => {
-    if (token) {
-      navigate('/');
-    }
-  }, [token, navigate]);
 
   useEffect(() => {
     if (error) {

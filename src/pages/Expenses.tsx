@@ -169,6 +169,12 @@ const Expenses = () => {
   useEffect(() => {
     setLoading(true);
     handleGetExpenses();
+
+    if (expenses.length < 10) {
+      filterValues.date_start = null;
+      filterValues.date_end = null;
+      handleFilter(filterValues);
+    }
   }, []);
 
   return (

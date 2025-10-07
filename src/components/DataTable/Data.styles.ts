@@ -13,7 +13,7 @@ export const StyledTableHead = styled(TableHead)({
   background: '#F7F7F7',
   '& th': {
     fontWeight: 700,
-    fontSize: 18,
+    fontSize: 16,
     color: '#222',
     borderBottom: 'none',
     padding: '18px 0',

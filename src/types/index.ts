@@ -65,3 +65,11 @@ export interface Expense {
   num_installments: number;
   payment_day: number;
 }
+
+export interface Saving {
+  id: number,
+  priority: number;
+  description: string;
+  value: number;
+  goal: number;
+}

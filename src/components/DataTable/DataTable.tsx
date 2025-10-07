@@ -5,7 +5,7 @@ import { StyledTableContainer, StyledTableHead, StyledTableRow } from './Data.st
 export interface DataTableHeader<T> {
   label: string;
   key: keyof T;
-  align?: 'left' | 'center' | 'right';
+  align?: 'left' | 'center' | 'right' | 'inherit';
 }
 
 interface DataTableProps<T> {

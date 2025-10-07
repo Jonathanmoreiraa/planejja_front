@@ -145,8 +145,8 @@ const Sidebar: React.FC = () => {
             </SubMenuItem>
           </SubMenu>
         )}
-        <MenuItem selected={selected === 'Reservas'} onClick={() => {setSelected('Reservas'); setFinancasOpen(false)}}>
-          <FaWallet style={{ marginRight: 16 }} /> Reservas
+        <MenuItem selected={selected === 'Caixinhas'} onClick={() => {setSelected('Caixinhas'); navigate('/caixinhas'); setFinancasOpen(false)}}>
+          <FaWallet style={{ marginRight: 16 }} /> Caixinhas
         </MenuItem>
         <MenuItem selected={selected === 'Configurações'} onClick={() => {setSelected('Configurações'); setFinancasOpen(false)}}>
           <FaCog style={{ marginRight: 16 }} /> Configurações

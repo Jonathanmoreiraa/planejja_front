@@ -110,7 +110,9 @@ const Login: React.FC = () => {
             alignItems: 'center',
             p: 4,
           }}
-        />
+        >
+          <img src="/logos/logo_2cents_white.svg" alt="Logo 2Cents" style={{ height: 'auto' }} />
+        </Box>
       )}
       
       <Box
@@ -217,7 +219,9 @@ const Login: React.FC = () => {
             justifyContent: 'center',
             p: 4,
           }}
-        />
+        >
+          <img src="/logos/logo_2cents_white.svg" alt="Logo Planejja" style={{ maxWidth: '80%', height: 'auto' }} />
+        </Box>
       )}
 
       <Snackbar
