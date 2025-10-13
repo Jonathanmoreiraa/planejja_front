@@ -20,6 +20,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import CloseIcon from '@mui/icons-material/Close';
 import { login, clearError } from '../store/slices/authSlice';
 import { AppDispatch, RootState } from '../store';
+import logo from '../assets/logo_2cents_white.svg';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -111,7 +112,7 @@ const Login: React.FC = () => {
             p: 4,
           }}
         >
-          <img src="/logos/logo_2cents_white.svg" alt="Logo 2Cents" style={{ height: 'auto' }} />
+          <img src={logo} alt="Logo 2Cents" style={{ height: 'auto' }} />
         </Box>
       )}
       
@@ -220,7 +221,7 @@ const Login: React.FC = () => {
             p: 4,
           }}
         >
-          <img src="/logos/logo_2cents_white.svg" alt="Logo Planejja" style={{ maxWidth: '80%', height: 'auto' }} />
+          <img src={logo} alt="Logo Planejja" style={{ maxWidth: '80%', height: 'auto' }} />
         </Box>
       )}
 
